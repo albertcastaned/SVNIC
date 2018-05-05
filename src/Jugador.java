@@ -13,6 +13,7 @@ import javax.swing.*;
  */
 public class Jugador extends GameObject {
     private BufferedImage imagen = null;
+    private BufferedImage blank;
     private BufferedImage[] jugador;
     private BufferedImage[] jugadorArriba;
     private BufferedImage[] jugadorAbajo;
@@ -25,7 +26,7 @@ public class Jugador extends GameObject {
     private boolean invencible;
     private boolean golpeado;
     private int index = 0;
-
+    private boolean visible=true;
 
     /**
      *
@@ -39,6 +40,7 @@ public class Jugador extends GameObject {
         this.handler=handler;
         try {
             imagen = ImageIO.read(Jugador.class.getResourceAsStream("/imagenes/sprites.png"));
+            blank = ImageIO.read(Jugador.class.getResourceAsStream("/imagenes/blank.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -166,6 +168,11 @@ public class Jugador extends GameObject {
             index++;
             if (index == frames.length)
                 index = 0;
+            
+            if(golpeado)
+            {
+            	visible=!visible;
+            }
 
         }
     };
@@ -177,8 +184,8 @@ public class Jugador extends GameObject {
         @Override
         public void actionPerformed(ActionEvent e) {
             golpeado=false;
-            
             golpeadoT.stop();
+            visible=true;
         }
     };
     /**
@@ -203,10 +210,13 @@ public class Jugador extends GameObject {
      */
     @Override
     public void render(Graphics g) {
-
-
+    		
+    	 if(visible) {
             if(velY==0) {
-                g.drawImage(jugador[index], x, y, null);
+                
+               
+                	g.drawImage(jugador[index], x, y, null);
+                
             }else if(velY<0) {
                 g.drawImage(jugadorArriba[index], x, y, null);
             }else if(velY>0) {
@@ -216,6 +226,7 @@ public class Jugador extends GameObject {
                 g.setColor(new Color(129, 241, 116, 50));
                 g.fillOval(x - 10, y - 10, jugador[0].getWidth() + 10, jugador[0].getWidth() + 10);
             }
+    	 }
           
 
     }
